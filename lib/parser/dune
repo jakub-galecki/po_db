@@ -1,3 +1,5 @@
 (library
  (name parser)
- (libraries yojson logs))
+ (preprocess
+  (pps ppx_deriving.show ppx_deriving.ord))
+ (libraries yojson logs fmt))
