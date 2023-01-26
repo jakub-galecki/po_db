@@ -1,0 +1,1 @@
+let _ = Server.run_server ()

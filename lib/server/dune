@@ -1,0 +1,5 @@
+(library
+ (name server)
+ (libraries dream logs yojson parser)
+ (preprocess
+  (pps lwt_ppx)))

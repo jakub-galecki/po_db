@@ -1,0 +1,4 @@
+(executable
+ (public_name po_db)
+ (name main)
+ (libraries server))
