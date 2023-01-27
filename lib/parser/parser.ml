@@ -3,6 +3,9 @@ module JsonUtil = Yojson.Basic.Util
 
 exception Error of string
 
+(*
+  This should be rewritten as monad with state   
+*)
 
 (*
 JSON REQUEST
@@ -22,7 +25,6 @@ If alias doesnt exists it equals to the table name
 *)
 
 
-(* TODO : ALL OF THIS SHIT WORKS ONLY FOR ONE ELEM *)
 
 type alias =  string * string [@@deriving show] 
 type property = string * string [@@deriving show]
@@ -99,31 +101,6 @@ type logical_plan = {
 
 (* Implement custom formatters *)
 
-let print_tuples (tps: tuples) =
-  let pair_printer = Fmt.(pair ~sep:comma string string) in 
-  let list_printer = Fmt.(list ~sep:(const pf ";@ ") pair_printer) in 
-  Logs.info(fun m -> m "TUPLES: %a" list_printer tps) 
-
-
-let print_froms (fms: froms) = 
-  let pair_printer = Fmt.(pair ~sep:comma string string) in 
-  let list_printer = Fmt.(list ~sep:(const pf ";@ ") pair_printer) in 
-  Logs.info(fun m -> m "FROMS: %a" list_printer fms)  
-
-
-let print_joins  (jns : joins) =
-  let pair_printer = Fmt.(pair ~sep:comma string pp_tpredicate) in 
-  let list_printer = Fmt.(list ~sep:(const pf ";@ ") pair_printer) in 
-  Logs.info(fun m -> m "JOINS: %a" list_printer jns)  
-
-let print_tpredicates (tps: tpredicates) = 
-  let list_printer = Fmt.(list ~sep:(const pf ";@ ") pp_tpredicate) in 
-  Logs.info(fun m -> m "TABLE PREDICATES: %a" list_printer tps)  
- 
-let print_cpredicated (cps: cpredicates) = 
-  let list_printer = Fmt.(list ~sep:(const pf ";@ ") pp_cpredicate) in 
-  Logs.info(fun m -> m "TABLE PREDICATES: %a" list_printer cps)  
- 
 (* let is_table_alias str = 
   let rgx = Str.regexp "^[a-aA-Z]*\\([a-aA-Z]+\\)" in 
   Str.string_match rgx str 0 *)
