@@ -2,4 +2,4 @@
  (name parser)
  (preprocess
   (pps ppx_deriving.show ppx_deriving.ord))
- (libraries yojson logs fmt))
+ (libraries yojson logs fmt mtime))

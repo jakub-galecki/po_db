@@ -33,7 +33,7 @@ type tpredicate = {
   x: property; 
   op: string;
   y: property;
-} [@@deriving show]
+} [@@deriving show] 
 
 (* tpredicate TableName.property operator TableName.property *)
 let is_tpredicate str = 
