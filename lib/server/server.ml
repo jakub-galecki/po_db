@@ -16,4 +16,4 @@ let routes = [
   Ws.get "/"  (fun _ -> Ws.websocket handler)
 ]
 
-let run_server () = Ws.run @@ Ws.logger @@ Ws.router routes
+let run_server () = Ws.run @@ Ws.logger @@ Ws.router routes 

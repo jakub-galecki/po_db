@@ -3,6 +3,9 @@ module JsonUtil = Yojson.Basic.Util
 
 exception Error of string
 
+
+(* todo env with table names mapped to aliases *)
+
 (*
   This should be rewritten as monad with state   
 *)
@@ -28,6 +31,7 @@ If alias doesnt exists it equals to the table name
 
 type alias =  string * string [@@deriving show] 
 type property = string * string [@@deriving show]
+
 
 type tpredicate = {
   x: property; 
@@ -225,8 +229,3 @@ let parse_to_logical_plan json = print_json json;
   and preds = handle_predicates json in 
   let lp = {met=m;tups=t;fms=fms;jns=jns;cps=(fst preds);tps=(snd preds)} in 
   Logs.info(fun m -> m "LP: %a" pp_logical_plan lp)
-
-  
-
-
-
