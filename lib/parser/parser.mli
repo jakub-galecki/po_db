@@ -1,3 +1,1 @@
-type logical_plan
-
-val parse_to_logical_plan: Yojson.Basic.t -> unit
+val parse_to_logical_plan: Yojson.Basic.t -> Logical_plan.logical_plan

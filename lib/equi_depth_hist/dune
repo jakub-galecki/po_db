@@ -1,5 +1,5 @@
 (library
- (name parser)
+ (name equi_depth_hist)
  (preprocess
   (pps ppx_deriving.show ppx_deriving.ord))
- (libraries yojson logs fmt mtime logical_plan))
+ (libraries batteries logs operator))

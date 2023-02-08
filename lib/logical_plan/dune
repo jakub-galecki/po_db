@@ -1,5 +1,5 @@
 (library
- (name histogram)
+ (name logical_plan)
  (preprocess
   (pps ppx_deriving.show ppx_deriving.ord))
- (libraries batteries logs))
+ (libraries logs fmt))

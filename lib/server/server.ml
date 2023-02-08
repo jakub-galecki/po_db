@@ -9,7 +9,8 @@ let handler client =
     match%lwt Ws.receive client with 
     | Some buf ->
       let json = Json.from_string buf in 
-      handle_json json; loop ()
+      let lp = handle_json json in 
+      Join_opt.get_best_plan lp; loop ();
     | None -> Ws.close_websocket client in loop ()
 
 let routes = [

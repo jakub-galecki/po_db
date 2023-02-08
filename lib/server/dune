@@ -1,5 +1,5 @@
 (library
  (name server)
- (libraries dream logs yojson parser)
+ (libraries dream logs yojson parser join_opt)
  (preprocess
   (pps lwt_ppx)))
