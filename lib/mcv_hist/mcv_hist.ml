@@ -16,8 +16,6 @@ type mcv_hist = {
   total: int;
 }
 
-type operator = LESS_THAN | GREATER_THAN | EQUAL | LESS_THAN_OR_EQ | GREATER_THAN_OR_EQ
-
 let exists_for_retlation (relation: string) (attr: string) =
   Sys.file_exists ("statistics/" ^ relation ^ "/histograms/mcv" ^ attr)
 
@@ -37,17 +35,28 @@ let load_from_file (relation: string) (attr: string) : mcv_hist =
     {t_name=relation; attr=attr; entries= data; n_entries=(List.length data); total=(!total)}
 
 
-let execute_operator op x y = failwith "todo"
 let get_frac n v = (float_of_int v) /. (float_of_int v)
 
-let  mcv_selectivity_restriction (mcv: mcv_hist) (constant: int) (op: operator) = 
+let  mcv_selectivity_restriction (mcv: mcv_hist) (constant: int) (op: Operator.t) = 
       let rec loop acc = function 
-      | h :: tl -> if (execute_operator op (h.value) constant) then (loop (get_frac mcv.total h.frequency) tl)
+      | h :: tl -> if (Operator.execute_binary_operator (h.value) constant op) then (loop (get_frac mcv.total h.frequency) tl)
       else (loop acc tl)
       | _ -> acc in loop 0.0 mcv.entries
 
-(* let mcv_selectivity_join (mcv1: mcv_hist) (mcv2: mcv_hist) (op: operator) = 
-  let rec loop acc =  *)
+let mcv_selectivity_join (mcv1: mcv_hist) (mcv2: mcv_hist) (op: Operator.t) = 
+  let rec loop acc = function 
+    | h :: tl -> (loop (acc +.((get_frac mcv2.total h.frequency) *. (mcv_selectivity_restriction mcv1 (h.value) op))) tl) 
+    | _ -> acc in loop 0.0 mcv2.entries
+
+
+let mcv_hist_selectivity_lt (mcv: mcv_hist) (hist : Equi_depth_hist.t) (op: Operator.t) = 
+  let rec loop acc = function 
+  | h :: tl ->  
+    (loop (acc +. 
+      ((get_frac mcv.total (h.value)) *.
+        (Equi_depth_hist.get_selectivity_restriction (hist.t_name) (hist.attr) (h.value) op))) tl)
+  | _ -> acc in loop 0.0 mcv.entries
+
 
 
 

@@ -39,7 +39,7 @@ let hist_v_from_str (str: string) (index: int) : hist_v =
   | _ -> raise (Error "Failed to parse histogram")
 
 
-type equi_depth_hist = {
+type t = {
   t_name: string;
   attr: string;
   data: hist_v list;
@@ -49,12 +49,12 @@ type equi_depth_hist = {
 
 (* Function performs binary search on histogram buckets - todo *)
 (* not its O(n) but we could do better *)
-let find_bucket_for_value (hist: equi_depth_hist) (v: int) : hist_v = 
+let find_bucket_for_value (hist: t) (v: int) : hist_v = 
    List.find (fun b -> ( b.value.lower_bound < v) && (b.value.upper_boud >= v)) hist.data 
 
 let min_selectivity = 0.01;; (* Minimum selectivity to avoid underestimation *)
 
-let load_histogram_from_file (t_name: string) (attr: string) : equi_depth_hist = 
+let load_histogram_from_file (t_name: string) (attr: string) : t = 
   (* fixme: do not use magic strings *)
   let file = ("statistics/" ^ t_name ^ "/" ^ attr ^ "/histograms/equi_depth/" ^ attr) in 
   let lines = BatFile.lines_of file  in 
@@ -80,7 +80,7 @@ let print hist =
 
 
 (* RESTRICTION SELECTIVITIES i.e. calculates selectivity for R.X <op> const *)
-let restriction_selectivity_lt (hist: equi_depth_hist) (const: int) : selectivity = 
+let restriction_selectivity_lt (hist: t) (const: int) : selectivity = 
   try let hist_v = find_bucket_for_value hist const in 
     match hist_v.value.index with 
     | i when (i < 0) -> float_of_int 0
@@ -90,7 +90,7 @@ let restriction_selectivity_lt (hist: equi_depth_hist) (const: int) : selectivit
   with Not_found -> min_selectivity
 ;;
 
-let restriction_selectivity_eq (hist: equi_depth_hist) (value: int) : selectivity =
+let restriction_selectivity_eq (hist: t) (value: int) : selectivity =
   let hist_v = find_bucket_for_value hist value in 
     (float_of_int hist_v.frequency) /. (float_of_int hist_v.n_distinct_values) /. (float_of_int hist.total)
 
@@ -111,7 +111,7 @@ let merge_hists (h1: equi_depth_hist) (h2: equi_depth_hist) : (int * int) list
 *)
 
 (* Could be optimized *)
-let join_selectivity_lt (_: equi_depth_hist) (_: equi_depth_hist) : selectivity =  0.3333
+let join_selectivity_lt (_: t) (_: t) : selectivity =  0.3333
     (* let sync = failwith "merge two histograms" in 
       let rec calculate k (cur_fx, cur_fy) (next_fx, next_fy) sel_acc = 
         if k >= (hist_x.n_buckets + hist_y.n_buckets) then sel_acc else

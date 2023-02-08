@@ -120,7 +120,6 @@ let handle_predicates json : (Logical_plan.cpredicates * Logical_plan.tpredicate
     ) ([], []) arr 
 
 
-(* TODO: Create method to create LOGICAL PLAN *)
 let parse_to_logical_plan json : Logical_plan.logical_plan = print_json json;
   let m = handle_method json 
   and t = handle_tuples json 
