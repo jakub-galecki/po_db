@@ -58,8 +58,3 @@ let mcv_hist_selectivity_lt (mcv: mcv_hist) (hist : Equi_depth_hist.t) (op: Oper
   | _ -> acc in loop 0.0 mcv.entries
 
 
-
-
-
-
-

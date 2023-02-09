@@ -38,7 +38,7 @@ type logical_plan = {
 
 
 let is_cpredicate (str: string) : bool =  
-  let regx = Str.regexp "[a-zA-z0-9]+\\.[a-zA-z0-9]+ ..? [a-zA-Z0-9]+" in
+  let regx = Str.regexp "^[a-zA-z0-9]+\\.[a-zA-z0-9]+ ..? [a-zA-Z0-9]+$" in
 Str.string_match regx str 0
 
 (* a.tuple <operator> constant*)
@@ -60,8 +60,8 @@ match Str.split (Str.regexp " ") str with
 
 
 (* tpredicate TableName.property operator TableName.property *)
-let is_tpredicate (str: string) : bool = 
-  let regx = Str.regexp "[a-zA-z0-9]+\\.[a-zA-z0-9]+ . [a-zA-z0-9]+\\.[a-zA-z0-9]+" in
+let is_tpredicate (str: string) : bool =
+  let regx = Str.regexp "^[a-zA-z0-9]+\\.[a-zA-z0-9]+ ..? [a-zA-z0-9]+\\.[a-zA-z0-9]+$" in
 Str.string_match regx str 0
 
 let tpredicate_from_string (str: string) : tpredicate = 

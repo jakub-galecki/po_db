@@ -1,0 +1,7 @@
+{
+    "method" : "select",
+    "tuples": ["alias.tuple", "..."],
+    "froms": ["tableName(alias)", "..."],
+    "joins": ["alias<predicate>", "..."],
+    "predicates": ["predicate", "..."]
+  }

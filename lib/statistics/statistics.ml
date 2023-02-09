@@ -1,19 +1,19 @@
 exception Error of string
 
 type stats = {
-  mutable ncard: int;
-  mutable tcard: int;
-  mutable icard: int;
-  mutable nindx: int;
+  ncard: int;
+  tcard: int;
+  icard: int;
+  nindx: int;
 }
 
-let stats_init_default : stats = 
-  {
-    ncard = 0;
-    tcard = 0;
-    icard = 0;
-    nindx = 0;
-  }
+
+let get_property_by_name (xs: (string * int) list ) (prop: string) : int =
+  let rec loop = function
+  | (name, value) :: tl -> if name = prop then value else (loop tl)
+  | [] -> -1 in 
+  loop xs 
+
 
 let print s = 
   print_string "NCARD: "; print_int s.ncard; print_newline (); 
@@ -22,21 +22,22 @@ let print s =
   print_string "NINDX: "; print_int s.nindx; print_newline ()
 
 let get_stats (relation_name: string) (attribute: string) : stats  = 
-  let file = ("statistics/" ^ relation_name ^ "/" ^ attribute ^ "/stats") in
+  let file = ("statistics/" ^ relation_name ^ "/" ^ attribute ^ "/stats") in 
   let lines = BatFile.lines_of file in 
-    let tmp = BatEnum.map (fun s -> 
+    let tmp =  (BatList.of_enum (BatEnum.map (fun s -> 
       let splitted = (Str.split (Str.regexp ";") s) in 
         ((String.trim (List.hd splitted)), (int_of_string ((String.trim (List.hd (List.tl splitted))))))  (* ugh refactor *)
-    )  lines in 
-    let ret = stats_init_default in 
-    let _ = BatEnum.iter (fun s -> match s with 
-          | ("ncard", value) -> ret.ncard <- value; ()
-          | ("tcard", value) -> ret.tcard <- value; ()
-          | ("icard", value) -> ret.icard <- value; ()
-          | ("nindx", value) -> ret.nindx <- value; ()
-          | _ -> raise (Error "Unkown field in stats")
-        ) tmp in 
-        ret
+    )  lines)) in 
+    let ncard = get_property_by_name tmp "ncard"
+    and tcard = get_property_by_name tmp "tcard" 
+    and  icard = get_property_by_name tmp "icard" 
+    and nindx = get_property_by_name tmp "nindx" in
+    {ncard=ncard;tcard=tcard;icard=icard;nindx=nindx}
 
-let get_ncard s = s.ncard;
-    
+let get_ncard_only (relation_name: string) (attribute: string) =
+  let file = ("statistics/" ^ relation_name ^ "/" ^ attribute ^ "/stats") in 
+    let lines = BatFile.lines_of file in 
+      let (_, v) = BatEnum.find (fun s -> (fst s) = "ncard") (BatEnum.map (fun s -> 
+        let splitted = (Str.split (Str.regexp ";") s) in 
+          ((String.trim (List.hd splitted)), (int_of_string ((String.trim (List.hd (List.tl splitted))))))  (* ugh refactor *)
+      )  lines) in v

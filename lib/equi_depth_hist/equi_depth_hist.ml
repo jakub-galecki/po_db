@@ -23,7 +23,7 @@ let print_bucket b =
 let bukcet_from_str (str: string) (index: int) : bucket = 
   let splitted_str = Str.split (Str.regexp "-") (String.trim str) in 
     match splitted_str with
-    | lower :: upper :: _ -> {lower_bound = (int_of_string lower); upper_boud = (int_of_string upper); index=index}
+    | lower :: upper :: _ -> {lower_bound = (int_of_string (String.trim lower)); upper_boud = (int_of_string (String.trim upper)); index=index}
     | _ -> raise (Error "Failed to parse lower and upper bound")
 
 

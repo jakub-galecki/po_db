@@ -115,9 +115,10 @@ let handle_predicates json : (Logical_plan.cpredicates * Logical_plan.tpredicate
     let arr = JsonUtil.filter_string (JsonUtil.to_list arr_f) in 
     List.fold_left (fun acc elem -> 
       if Logical_plan.is_cpredicate elem then
-         ((List.append (fst acc) [Logical_plan.cpredicate_from_string elem]), (snd acc))
+         ((List.append (fst acc) [Logical_plan.cpredicate_from_string elem]), (snd acc)) 
       else ((fst acc), (List.append (snd acc) [Logical_plan.tpredicate_from_string elem]))  
     ) ([], []) arr 
+
 
 
 let parse_to_logical_plan json : Logical_plan.logical_plan = print_json json;
