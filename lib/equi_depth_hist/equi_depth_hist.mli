@@ -14,7 +14,7 @@ val print_bucket : bucket -> unit
 val load_histogram_from_file : string -> string -> t
 val print : t -> unit
 val find_bucket_for_value :  t -> int -> hist_v
-val get_selectivity_restriction :  string -> string -> int ->  Operator.t -> selectivity
+val get_selectivity_restriction :  t -> int ->  Operator.t -> selectivity
 val exists_for_relation_attr : string -> string -> bool
-val get_selectivity_join :  string -> string -> string -> string ->  Operator.t -> selectivity
+val get_selectivity_join :  t -> t ->  Operator.t -> selectivity
 

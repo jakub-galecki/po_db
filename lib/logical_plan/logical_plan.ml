@@ -16,10 +16,6 @@ type cpredicate = {
   cp2: int;
 } [@@deriving show]
 
-type _ predicate = 
-  | Cpred : cpredicate -> cpredicate predicate
-  | Tpred : tpredicate -> tpredicate predicate
-
 type method_ = string [@@deriving show]
 type tuples = (string * string) list [@@deriving show]
 type froms = alias list [@@deriving show]

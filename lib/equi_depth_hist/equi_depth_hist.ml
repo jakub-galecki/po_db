@@ -95,8 +95,7 @@ let restriction_selectivity_eq (hist: t) (value: int) : selectivity =
     (float_of_int hist_v.frequency) /. (float_of_int hist_v.n_distinct_values) /. (float_of_int hist.total)
 
 
-let get_selectivity_restriction (table: string) (attr: string) (value: int) (op: Operator.t) =
-  let hist = load_histogram_from_file table attr in match op with
+let get_selectivity_restriction (hist: t) (value: int) (op: Operator.t) = match op with
     | LESS_THAN -> restriction_selectivity_lt hist value
     | GREATER_THAN ->  (float_of_int 1) -. (restriction_selectivity_lt hist value) -. (restriction_selectivity_eq hist value )
     | EQUAL -> restriction_selectivity_eq hist value
@@ -125,8 +124,7 @@ let join_selectivity_lt (_: t) (_: t) : selectivity =  0.3333
 (* todo *)
 let join_selectivity_eq _ _ = min_selectivity
 
-let get_selectivity_join  (table_x: string) (attr_x: string) (table_y: string) (attr_y: string) (op: Operator.t)  =
-    let hist_x = load_histogram_from_file table_x attr_x and hist_y = load_histogram_from_file table_y attr_y in
+let get_selectivity_join  (hist_x: t) (hist_y : t) (op: Operator.t)  =
     match op with 
     | LESS_THAN -> join_selectivity_lt hist_x hist_y
     | GREATER_THAN -> join_selectivity_lt hist_y hist_x
